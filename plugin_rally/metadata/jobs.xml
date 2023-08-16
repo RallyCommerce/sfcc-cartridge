@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jobs xmlns="http://www.demandware.com/xml/impex/jobs/2015-07-01">
+    <job job-id="Rally Products Update" priority="0">
+        <description/>
+        <parameters/>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="Products Update Step" type="custom.RallyCheckout-ProductUpdates" enforce-restart="false">
+                <description/>
+                <parameters/>
+            </step>
+        </flow>
+        <rules>
+            <on-running runtime-threshold="60m" enabled="false">
+                <mark-job-as-hanging/>
+            </on-running>
+        </rules>
+        <triggers>
+            <run-once enabled="false">
+                <date>2023-07-03Z</date>
+                <time>08:52:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+
+    <job job-id="Rally Product Stock Update" priority="0">
+        <description>Rally Checkout Custom inventory checks</description>
+        <parameters/>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="Rally-Inventory-Check" type="custom.RallyCheckout-CheckStockLevels" enforce-restart="false">
+                <description/>
+                <parameters/>
+            </step>
+        </flow>
+        <rules>
+            <on-running runtime-threshold="60m" enabled="false">
+                <mark-job-as-hanging/>
+            </on-running>
+        </rules>
+        <triggers>
+            <run-once enabled="true">
+                <date>2023-05-17Z</date>
+                <time>13:57:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+
+    <job job-id="Rally Order Status Notification" priority="0">
+        <description/>
+        <parameters/>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="Order Status Notification" type="custom.RallyCheckout-OrderStatusNotification" enforce-restart="false">
+                <description/>
+                <parameters/>
+            </step>
+        </flow>
+        <rules>
+            <on-running runtime-threshold="60m" enabled="false">
+                <mark-job-as-hanging/>
+            </on-running>
+        </rules>
+        <triggers>
+            <run-once enabled="true">
+                <date>2023-05-24Z</date>
+                <time>10:09:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+
+    <job job-id="Rally Products Delete Check" priority="0">
+        <description/>
+        <parameters/>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="CheckDeleted" type="custom.RallyCheckout-ProductsDeleted" enforce-restart="false">
+                <description/>
+                <parameters/>
+            </step>
+        </flow>
+        <rules>
+            <on-running runtime-threshold="60m" enabled="false">
+                <mark-job-as-hanging/>
+            </on-running>
+        </rules>
+        <triggers>
+            <run-once enabled="true">
+                <date>2023-07-13Z</date>
+                <time>11:20:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+
+    <job job-id="Rally Store Update" priority="0">
+        <description/>
+        <parameters/>
+        <flow>
+            <context site-id="RefArch"/>
+            <step step-id="StoreUpdates" type="custom.RallyCheckout-SiteUpdatesNotificatioon" enforce-restart="false">
+                <description/>
+                <parameters/>
+            </step>
+        </flow>
+        <rules>
+            <on-running runtime-threshold="60m" enabled="false">
+                <mark-job-as-hanging/>
+            </on-running>
+        </rules>
+        <triggers>
+            <run-once enabled="false">
+                <date>2023-06-27Z</date>
+                <time>09:50:00.000Z</time>
+            </run-once>
+        </triggers>
+    </job>
+
+</jobs>

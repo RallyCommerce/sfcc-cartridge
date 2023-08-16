@@ -1,0 +1,127 @@
+{
+    "step-types": {
+        "script-module-step": [
+            {
+                "@type-id": "custom.RallyCheckout-CheckStockLevels",
+                "module": "plugin_rally/cartridge/scripts/jobs/checkStockLevels.js",
+                "function": "checkLevels",
+                "description": "This Job checks and send notifications of product stock levels",
+                "parameters": {
+                    "parameters": [
+                        {
+                            "@name": "rallyLastRunDate",
+                            "description": "Last run date",
+                            "@type": "datetime-string",
+                            "@required": false,
+                            "@target-type": "date"
+                        }
+                    ]
+                },
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-OrderStatusNotification",
+                "module": "plugin_rally/cartridge/scripts/jobs/orderStatusNotifications.js",
+                "function": "execute",
+                "description": "This Job checks and send notifications for order status/shipping status",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-SiteUpdatesNotificatioon",
+                "module": "plugin_rally/cartridge/scripts/jobs/siteUpdates.js",
+                "function": "siteUpdates",
+                "description": "This Job checks and send notifications for site currency, locales and shipping zones",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-ProductUpdates",
+                "module": "plugin_rally/cartridge/scripts/jobs/productUpdates.js",
+                "function": "productUpdates",
+                "description": "This Job checks and send notifications of product updates",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-ProductsDeleted",
+                "module": "plugin_rally/cartridge/scripts/jobs/productDeleted.js",
+                "function": "productDeleted",
+                "description": "This Job checks and send notifications of product deletes",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
