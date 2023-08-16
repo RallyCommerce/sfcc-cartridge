@@ -1,22 +1,22 @@
 {
-	"_v": "23.2",
-	"clients": [
-		{
-			"client_id": "[---Your OCAPI Client ID---]",
-			"resources": [
-				{
-					"methods": [
-						"get",
-						"post",
-						"put",
-						"patch",
-						"delete"
-					],
-					"read_attributes": "(**)",
-					"write_attributes": "(**)",
-					"resource_id": "/**"
-				}
-			]
-		}
-	]
+    "_v": "20.8",
+    "clients": [
+        {
+            "client_id": "88192b1f-6dde-4d87-bae2-a91c3c624cf8",
+            "resources": [
+                {
+                    "methods": [
+                        "get",
+                        "post",
+                        "put",
+                        "patch",
+                        "delete"
+                    ],
+                    "read_attributes": "(**)",
+                    "write_attributes": "(**)",
+                    "resource_id": "/**"
+                }
+            ]
+        }
+    ]
 }

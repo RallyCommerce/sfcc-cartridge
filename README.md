@@ -1,1 +1,2 @@
-# Rally SFCC Cartridge
+# salesforce-cc-connector
+SFCC Rally Connector
