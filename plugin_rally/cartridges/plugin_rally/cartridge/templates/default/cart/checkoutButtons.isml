@@ -1,0 +1,29 @@
+<div class="mb-sm-3">
+    <script>
+        var clientId = '${pdict.rallyClientID}';
+        var rallyData = window.RallyCheckoutData || {};
+        window.rallyCheckoutButtonFallbackUrl = "${pdict.rallyConfig.fallbackUrl}";
+
+        var cartData = {id: "${pdict.rallyConfig.cartData.id}", currency: "${pdict.rallyConfig.cartData.currency}", content: <isprint value="${JSON.stringify(pdict.rallyConfig.cartData)}" encoding="off" />};
+        window.RallyCheckoutData = {...rallyData, ...cartData};
+        if (${pdict.isMinicart}) {
+            Rally.applyCartData(cartData);
+        } else {
+            window.addEventListener("load", (event) => {
+                Rally.applyCartData(cartData);
+            });
+        }
+
+    </script>
+    <isif condition="${pdict.rallyEnabled}">
+        <rally-checkout-button>
+        </rally-checkout-button>
+    <iselse/>
+        <a href="${URLUtils.https('Checkout-Begin')}"
+            class="btn btn-primary btn-block checkout-btn ${pdict.valid.error ? 'disabled' : ''}" role="button">
+            ${Resource.msg('button.checkout', 'cart', null)}
+        </a>
+    </isif>
+
+</div>
+

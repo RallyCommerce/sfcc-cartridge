@@ -1,0 +1,20 @@
+{
+    "hooks": [
+        {
+            "name": "dw.ocapi.shop.site.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/site.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/basketHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.beforePATCH",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.afterPOST",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
+        }
+    ]
+}

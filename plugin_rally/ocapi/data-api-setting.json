@@ -1,0 +1,22 @@
+{
+	"_v": "23.2",
+	"clients": [
+		{
+			"client_id": "[---Your OCAPI Client ID---]",
+			"resources": [
+				{
+					"methods": [
+						"get",
+						"post",
+						"put",
+						"patch",
+						"delete"
+					],
+					"read_attributes": "(**)",
+					"write_attributes": "(**)",
+					"resource_id": "/**"
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,50 @@
+<isset name="siteCustomPref" value="${dw.system.Site.current.preferences.custom}" scope="page" />
+<isset name="rallyScript" value="https://js.onrally.com/resources/platforms/salesforce.js" scope="page" />
+
+<isif condition="${'rallyScriptSource' in siteCustomPref && siteCustomPref.rallyScriptSource === true}">
+    <isset name="rallyScript" value="https://js.sandbox.onrally.com/resources/platforms/salesforce.js" scope="page" />
+</isif>
+
+<isset name="customer" value="${session.isCustomerAuthenticated() ? session.getCustomer().getProfile() : null}" scope="page" />
+<isif condition="${customer && customer.getAddressBook()}">
+    <isset name="customerAddress" value="${customer.getAddressBook().getPreferredAddress()}" scope="page" />
+</isif>
+<isif condition="${'rallyEnabled' in siteCustomPref && siteCustomPref.rallyEnabled }">
+    <script>
+    !function(t,n){var e=n.createElement("script");e.async=!0,e.type="module",e.src="${rallyScript}";var l=n.getElementsByTagName("script")[0];l.parentNode.insertBefore(e,l)}(window,document);
+    </script>
+    <script>
+        var rallyCheckoutData = window.RallyCheckoutData || {};
+        var clientId = "${siteCustomPref.rallyClientID}";
+        rallyCheckoutData.config = {};
+        rallyCheckoutData.config.clientId = clientId;
+        rallyCheckoutData.currency = "${session.currency.currencyCode}";
+        <isif condition="${customer !== null}">
+        var customerData = {
+            email: '${customer.getEmail()}',
+            firstName: '${customer.getFirstName()}',
+            lastName: '${customer.getLastName()}',
+            phone: '${customer.getPhoneHome()}'
+        };
+        <isif condition="${customerAddress}">
+        var customerAddress = {
+            externalId: '${customerAddress.ID}',
+            firstName: '${customerAddress.firstName}',
+            lastName: '${customerAddress.lastName}',
+            company: '${customerAddress.companyName || ""}',
+            address1: '${customerAddress.address1}',
+            address2: '${customerAddress.address2 || ""}',
+            city: '${customerAddress.city}',
+            country: '${customerAddress.countryCode}',
+            countryCode: '${customerAddress.countryCode.value}',
+            province: '${customerAddress.stateCode}',
+            zip: '${customerAddress.postalCode}',
+            phone: '${customerAddress.phone}'
+        };
+        // customerData.shipping = customerAddress;
+        </isif>
+        rallyCheckoutData.customerData = customerData;
+        </isif>
+        window.RallyCheckoutData = rallyCheckoutData;
+    </script>
+</isif>
