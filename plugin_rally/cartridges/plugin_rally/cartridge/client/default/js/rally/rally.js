@@ -1,0 +1,13 @@
+'use strict';
+
+module.exports = {
+    basketChange: function () {
+        $('body').on('cart:update product:afterAddToCart', function (event, data) {
+            if (data.action === 'Cart-AddProduct') {
+                window.RallyCheckoutData.id = data.cart.basketId;
+            } else if (data.action === 'Cart-RemoveProductLineItem') {
+                window.RallyCheckoutData.id = data.basket.basketId;
+            }
+        });
+    }
+};

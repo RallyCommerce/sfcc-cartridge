@@ -1,6 +1,10 @@
 {
     "hooks": [
         {
+            "name": "dw.system.request.onRequest",
+            "script": "./cartridge/scripts/hooks/onRequest"
+        },
+        {
             "name": "dw.ocapi.shop.site.modifyGETResponse",
             "script": "./cartridge/scripts/hooks/site.js"
         },
@@ -13,8 +17,24 @@
             "script": "./cartridge/scripts/hooks/orderHooks.js"
         },
         {
+            "name": "dw.ocapi.shop.order.afterPATCH",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
+        },
+        {
             "name": "dw.ocapi.shop.order.afterPOST",
             "script": "./cartridge/scripts/hooks/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.payment_instrument.beforePATCH",
+            "script": "./cartridge/scripts/hooks/orderPaymentsHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.payment_instrument.beforePOST",
+            "script": "./cartridge/scripts/hooks/orderPaymentsHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.product.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/productHooks.js"
         }
     ]
 }

@@ -64,10 +64,18 @@
                     </value-definition>
                 </value-definitions>
             </attribute-definition>
+            <attribute-definition attribute-id="rallyCheckoutSessionId">
+                <display-name xml:lang="x-default">Rally Checkout Payment Id</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
         </custom-attribute-definitions>
         <group-definitions>
             <attribute-group group-id="rally Commerce">
                 <display-name xml:lang="x-default">Rally Commerce</display-name>
+                <attribute attribute-id="rallyCheckoutSessionId"/>
                 <attribute attribute-id="rallyOrderRejectionReason"/>
                 <attribute attribute-id="statusSentToRally"/>
                 <attribute attribute-id="lastShipStatusSentToRally"/>
@@ -114,6 +122,13 @@
             </attribute-definition>
             <attribute-definition attribute-id="rallyPaymentProcessorName">
                 <display-name xml:lang="x-default">Rally Payment Processor Name</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+            <attribute-definition attribute-id="rallyCheckoutSessionId">
+                <display-name xml:lang="x-default">Rally Checkout Payment Id</display-name>
                 <type>string</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>

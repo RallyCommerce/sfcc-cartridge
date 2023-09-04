@@ -3,6 +3,33 @@
 var Logger = require('dw/system/Logger').getLogger('rally');
 var Status = require('dw/system/Status');
 
+function sendInventoryUpdate(order) {
+    var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
+    var collections = require('*/cartridge/scripts/util/collections');
+    var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
+    var productsArray = [];
+
+    collections.forEach(order.getProductLineItems(), function (item) {
+        var masterProductId = null;
+        if (item.getProduct().isVariant()) {
+            masterProductId = item.getProduct().getMasterProduct().getID();
+        }
+        productsArray.push(rallyHelper.createProductStockLine(item.getProductID(), item.getProduct().getAvailabilityModel().getInventoryRecord(), masterProductId));
+    });
+    var currentService = 'rally.status_update';
+    var rallyService = RallyServiceHelper.rallyService(currentService);
+    var params = {
+        action: 'products-inventory-update',
+        reqBody: {
+            products: productsArray
+        },
+        reqMethod: 'POST'
+    };
+
+    var result = rallyService.call(params);
+    return result;
+}
+
 /**
  * Sends a confirmation to the current user
  * @param {dw.order.Order} order - The current user's order
@@ -28,21 +55,15 @@ function sendConfirmationMail(order) {
 
 exports.beforePATCH = function (order, orderInput) {
     var collections = require('*/cartridge/scripts/util/collections');
+    var OrderMgr = require('dw/order/OrderMgr');
+    var Order = require('dw/order/Order');
     if (orderInput.status) {
-        var OrderMgr = require('dw/order/OrderMgr');
-        var Order = require('dw/order/Order');
         var Transaction = require('dw/system/Transaction');
         // finalize order
         if (order.status.displayValue.toUpperCase() === 'CREATED' && orderInput.status.toUpperCase() === 'NEW') {
             Logger.warn('Start placing Order: ' + order.getCurrentOrderNo());
             OrderMgr.placeOrder(order);
             Logger.warn('End placing Order: ' + order.getCurrentOrderNo());
-            Logger.warn('Start Confirmation Email for Order: ' + order.getCurrentOrderNo());
-            var confirmationEmailSent = sendConfirmationMail(order);
-            if (!confirmationEmailSent) {
-                Logger.warn('Email not sent for order: ' + order.getCurrentOrderNo());
-            }
-            Logger.warn('End Confirmation Email for Order: ' + order.getCurrentOrderNo());
         }
         // stop temporary order and give basket back
         if (order.status.displayValue.toUpperCase() === 'CREATED' && orderInput.status.toUpperCase() === 'FAILED') {
@@ -54,16 +75,16 @@ exports.beforePATCH = function (order, orderInput) {
                 OrderMgr.cancelOrder(order);
             });
         }
-        if (orderInput.payment_status && orderInput.payment_status.toUpperCase() === 'PAID') {
-            order.setPaymentStatus(Order.PAYMENT_STATUS_PAID);
-        }
-        if (orderInput.confirmation_status && orderInput.confirmation_status.toUpperCase() === 'CONFIRMED') {
-            order.setConfirmationStatus(Order.CONFIRMATION_STATUS_CONFIRMED);
-        }
         order.setExportStatus(Order.EXPORT_STATUS_READY);
         // Update Rally order statuses
         order.custom.statusSentToRally = order.getStatus().getValue();
         order.custom.lastShipStatusSentToRally = order.getShippingStatus().getValue();
+    }
+    if (orderInput.payment_status && orderInput.payment_status.toUpperCase() === 'PAID') {
+        order.setPaymentStatus(Order.PAYMENT_STATUS_PAID);
+    }
+    if (orderInput.confirmation_status && orderInput.confirmation_status.toUpperCase() === 'CONFIRMED') {
+        order.setConfirmationStatus(Order.CONFIRMATION_STATUS_CONFIRMED);
     }
 
     var ppoProducts = orderInput.product_items ? orderInput.product_items.toArray() : [];
@@ -131,28 +152,24 @@ exports.beforePATCH = function (order, orderInput) {
 
 // eslint-disable-next-line no-unused-vars
 exports.afterPOST = function (order, orderInput) {
-    var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
-    var collections = require('*/cartridge/scripts/util/collections');
-    var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
-    var productsArray = [];
+    var result = sendInventoryUpdate(order);
+    if (!result.ok) {
+        Logger.warn('Inventory update failed: ' + order.getCurrentOrderNo());
+    }
+    return new Status(Status.OK);
+};
 
-    collections.forEach(order.getProductLineItems(), function (item) {
-        var masterProductId = null;
-        if (item.getProduct().isVariant()) {
-            masterProductId = item.getProduct().getMasterProduct().getID();
+// eslint-disable-next-line no-unused-vars
+exports.afterPATCH = function (order, orderInput) {
+    if (orderInput.status && orderInput.status.toUpperCase() === 'NEW') {
+        var result = sendInventoryUpdate(order);
+        if (!result.ok) {
+            Logger.warn('Inventory update failed: ' + order.getCurrentOrderNo());
         }
-        productsArray.push(rallyHelper.createProductStockLine(item.getProductID(), item.getProduct().getAvailabilityModel().getInventoryRecord(), masterProductId));
-    });
-    var currentService = 'rally.status_update';
-    var rallyService = RallyServiceHelper.rallyService(currentService);
-    var params = {
-        action: 'products-inventory-update',
-        reqBody: {
-            products: productsArray
-        },
-        reqMethod: 'POST'
-    };
-
-    rallyService.call(params);
+        var confirmationEmailSent = sendConfirmationMail(order);
+        if (!confirmationEmailSent) {
+            Logger.warn('Email not sent for order: ' + order.getCurrentOrderNo());
+        }
+    }
     return new Status(Status.OK);
 };

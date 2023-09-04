@@ -10,12 +10,18 @@
     <isset name="customerAddress" value="${customer.getAddressBook().getPreferredAddress()}" scope="page" />
 </isif>
 <isif condition="${'rallyEnabled' in siteCustomPref && siteCustomPref.rallyEnabled }">
+    <script defer="" type="text/javascript" src="${URLUtils.staticURL('js/rallyCart.js')}"></script>
     <script>
     !function(t,n){var e=n.createElement("script");e.async=!0,e.type="module",e.src="${rallyScript}";var l=n.getElementsByTagName("script")[0];l.parentNode.insertBefore(e,l)}(window,document);
     </script>
     <script>
         var rallyCheckoutData = window.RallyCheckoutData || {};
+        var basketId = '${session.privacy.basketId}';
+        if (basketId) {
+            rallyCheckoutData.id = basketId;
+        }
         var clientId = "${siteCustomPref.rallyClientID}";
+        rallyCheckoutData.fallbackUrl = "${URLUtils.url('Checkout-Begin')}";
         rallyCheckoutData.config = {};
         rallyCheckoutData.config.clientId = clientId;
         rallyCheckoutData.currency = "${session.currency.currencyCode}";

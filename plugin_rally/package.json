@@ -32,5 +32,10 @@
   "browserslist": [
     "last 2 versions",
     "ie >= 10"
-  ]
+  ],
+  "paths": {
+    "base": "../../storefront-reference-architecture-master/cartridges/app_storefront_base/",
+    "module": "../../storefront-reference-architecture-master/cartridges/modules/",
+    "bm_app_storefront_base": "../../storefront-reference-architecture-master/cartridges/bm_app_storefront_base/"
+  }
 }
