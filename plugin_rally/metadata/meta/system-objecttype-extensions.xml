@@ -173,6 +173,24 @@
         </group-definitions>
     </type-extension>
 
+    <type-extension type-id="ProductLineItem">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="rallyIsOrderBump">
+                <display-name xml:lang="x-default">Is Rally Order Bump Item</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>true</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="rallyOrderBumpId">
+                <display-name xml:lang="x-default">Rally Order Bump Offer Id</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
+
     <type-extension type-id="SitePreferences">
         <custom-attribute-definitions>
             <attribute-definition attribute-id="rallyClientID">
@@ -226,6 +244,13 @@
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>true</externally-managed-flag>
             </attribute-definition>
+            <attribute-definition attribute-id="rallyShippingCountriesConfig">
+                <display-name xml:lang="x-default">Rally Shipping Countries Config</display-name>
+                <type>text</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
         </custom-attribute-definitions>
         <group-definitions>
             <attribute-group group-id="RallyCheckout">
@@ -235,6 +260,7 @@
                 <attribute attribute-id="rallySecret"/>
                 <attribute attribute-id="rallyScriptSource"/>
                 <attribute attribute-id="rallyEnableConfirmationEmail"/>
+                <attribute attribute-id="rallyShippingCountriesConfig"/>
             </attribute-group>
         </group-definitions>
     </type-extension>

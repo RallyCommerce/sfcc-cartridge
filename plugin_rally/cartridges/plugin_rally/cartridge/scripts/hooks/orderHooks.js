@@ -156,6 +156,10 @@ exports.afterPOST = function (order, orderInput) {
     if (!result.ok) {
         Logger.warn('Inventory update failed: ' + order.getCurrentOrderNo());
     }
+    if (request.session.custom.basketId) {
+        var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyHelper.removeSessionObject(request.session.custom.basketId);
+    }
     return new Status(Status.OK);
 };
 
@@ -170,6 +174,15 @@ exports.afterPATCH = function (order, orderInput) {
         if (!confirmationEmailSent) {
             Logger.warn('Email not sent for order: ' + order.getCurrentOrderNo());
         }
+    }
+    return new Status(Status.OK);
+};
+
+exports.beforePOST = function (basket) {
+    if (basket) {
+        var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyHelper.updateCustomSessionVariables(basket.UUID);
+        request.session.custom.basketId = basket.UUID;
     }
     return new Status(Status.OK);
 };

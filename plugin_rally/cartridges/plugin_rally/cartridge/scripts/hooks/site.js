@@ -1,19 +1,20 @@
+'use strict';
+
+var Status = require('dw/system/Status');
+
 exports.modifyGETResponse = function (doc) {
     var TaxMgr = require('dw/order/TaxMgr');
+    var Site = require('dw/system/Site');
     var taxPolicy = TaxMgr.getTaxationPolicy();
     doc.addFlash({
         type: 'TaxationPolicy',
         message: taxPolicy
     });
-    var COHelpers = require('*/cartridge/scripts/checkout/checkoutHelpers');
-    var shippingForm = COHelpers.prepareShippingForm();
-
-    var shippingCountries = shippingForm.shippingAddress.addressFields.country.options;
-    var shippingCountriesReq = shippingCountries.map(function (country) {
-        return country.id;
-    });
+    var globalShippingCountries = Site.getCurrent().getCustomPreferenceValue('rallyShippingCountriesConfig');
     doc.addFlash({
         type: 'ShippingCountries',
-        message: shippingCountriesReq.toString()
+        message: globalShippingCountries
     });
+
+    return new Status(Status.OK);
 };

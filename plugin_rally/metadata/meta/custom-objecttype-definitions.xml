@@ -1,5 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <custom-type type-id="RallySessionBasket">
+        <display-name xml:lang="x-default">RallySessionBasket</display-name>
+        <staging-mode>no-staging</staging-mode>
+        <storage-scope>site</storage-scope>
+        <key-definition attribute-id="basketId">
+            <type>string</type>
+            <min-length>0</min-length>
+        </key-definition>
+        <attribute-definitions>
+            <attribute-definition attribute-id="sessionStorage">
+                <display-name xml:lang="x-default">SessionStorage</display-name>
+                <type>text</type>
+                <localizable-flag>false</localizable-flag>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+        </attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="Attributes">
+                <display-name xml:lang="x-default">Attributes</display-name>
+                <attribute attribute-id="sessionStorage"/>
+            </attribute-group>
+        </group-definitions>
+    </custom-type>
+
     <custom-type type-id="RallyStoreInformation">
         <staging-mode>no-staging</staging-mode>
         <storage-scope>site</storage-scope>

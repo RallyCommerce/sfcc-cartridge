@@ -36,13 +36,8 @@ function updateCustomObject(customObject, currentConfig) {
 var siteUpdates = function (args) {
     var rallyConfig = CustomObjectMgr.getCustomObject('RallyStoreInformation', Site.getCurrent().getID()); // Getting config or null
     var isFirstRun = false;
-    var COHelpers = require('*/cartridge/scripts/checkout/checkoutHelpers');
-    var shippingForm = COHelpers.prepareShippingForm();
-    var shippingCountries = shippingForm.shippingAddress.addressFields.country.options;
-    var shippingCountriesReq = shippingCountries.map(function (country) {
-        return country.id;
-    });
-    var shippingZones = shippingCountriesReq.toString();
+
+    var shippingZones = Site.getCurrent().getCustomPreferenceValue('rallyShippingCountriesConfig');
 
     var currentConfig = {
         defaultLocale: Site.getCurrent().getDefaultLocale(),

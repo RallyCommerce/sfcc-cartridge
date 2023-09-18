@@ -30,7 +30,8 @@
             email: '${customer.getEmail()}',
             firstName: '${customer.getFirstName()}',
             lastName: '${customer.getLastName()}',
-            phone: '${customer.getPhoneHome()}'
+            phone: '${customer.getPhoneHome()}',
+            locale: '${request.locale}'
         };
         <isif condition="${customerAddress}">
         var customerAddress = {
@@ -49,8 +50,13 @@
         };
         // customerData.shipping = customerAddress;
         </isif>
-        rallyCheckoutData.customerData = customerData;
+        <iselse/>
+        var customerData = {
+            locale: '${request.locale}'
+        };
         </isif>
+        rallyCheckoutData.customerData = customerData;
+
         window.RallyCheckoutData = rallyCheckoutData;
     </script>
 </isif>

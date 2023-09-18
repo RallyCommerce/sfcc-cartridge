@@ -3,39 +3,47 @@
 var server = require('server');
 server.extend(module.superModule);
 
-server.append('Show', function (req, res, next) {
+server.append('AddProduct', function (req, res, next) {
     var BasketMgr = require('dw/order/BasketMgr');
-    var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
-
     var currentBasket = BasketMgr.getCurrentBasket();
-    if (currentBasket) {
-        var rallyConfig = rallyPreferences.getConfiguration(currentBasket);
 
-        res.setViewData({
-            rallyEnabled: rallyPreferences.rallyEnabled,
-            rallyClientID: rallyPreferences.rallyClientID,
-            rallyConfig: rallyConfig
-        });
+    if (currentBasket) {
+        var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyPreferences.createOrUpdateBasketSession(currentBasket);
     }
     return next();
 });
 
-server.append('MiniCartShow', function (req, res, next) {
+server.append('UpdateQuantity', function (req, res, next) {
     var BasketMgr = require('dw/order/BasketMgr');
-    var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
     var currentBasket = BasketMgr.getCurrentBasket();
 
     if (currentBasket) {
-        var rallyConfig = rallyPreferences.getConfiguration(currentBasket);
-
-        res.setViewData({
-            rallyEnabled: rallyPreferences.rallyEnabled,
-            rallyClientID: rallyPreferences.rallyClientID,
-            rallyConfig: rallyConfig,
-            isMinicart: true
-        });
+        var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyPreferences.createOrUpdateBasketSession(currentBasket);
     }
+    return next();
+});
 
+server.append('AddBonusProducts', function (req, res, next) {
+    var BasketMgr = require('dw/order/BasketMgr');
+    var currentBasket = BasketMgr.getCurrentBasket();
+
+    if (currentBasket) {
+        var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyPreferences.createOrUpdateBasketSession(currentBasket);
+    }
+    return next();
+});
+
+server.append('RemoveProductLineItem', function (req, res, next) {
+    var BasketMgr = require('dw/order/BasketMgr');
+    var currentBasket = BasketMgr.getCurrentBasket();
+
+    if (currentBasket) {
+        var rallyPreferences = require('*/cartridge/scripts/util/rallyHelper.js');
+        rallyPreferences.createOrUpdateBasketSession(currentBasket);
+    }
     return next();
 });
 

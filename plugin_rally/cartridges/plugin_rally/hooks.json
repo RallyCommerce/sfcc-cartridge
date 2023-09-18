@@ -35,6 +35,34 @@
         {
             "name": "dw.ocapi.shop.product.modifyGETResponse",
             "script": "./cartridge/scripts/hooks/productHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.beforeGET",
+            "script": "./cartridge/scripts/hooks/basketHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipments.shipping_methods.beforeGET",
+            "script": "./cartridge/scripts/hooks/shippingMethods.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_method.beforePUT",
+            "script": "./cartridge/scripts/hooks/shippingMethod.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.payment_instrument.beforePOST",
+            "script": "./cartridge/scripts/hooks/basketPaymentInstruments.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.shipping_address.beforePUT",
+            "script": "./cartridge/scripts/hooks/shippingAddress.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.shipment.beforePATCH",
+            "script": "./cartridge/scripts/hooks/basketShipment.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.beforePOST",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
         }
     ]
 }
