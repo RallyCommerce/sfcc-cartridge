@@ -14,7 +14,9 @@ function sendInventoryUpdate(order) {
         if (item.getProduct().isVariant()) {
             masterProductId = item.getProduct().getMasterProduct().getID();
         }
-        productsArray.push(rallyHelper.createProductStockLine(item.getProductID(), item.getProduct().getAvailabilityModel().getInventoryRecord(), masterProductId));
+        if (item.getProduct().getAvailabilityModel().getInventoryRecord()) {
+            productsArray.push(rallyHelper.createProductStockLine(item.getProductID(), item.getProduct().getAvailabilityModel().getInventoryRecord(), masterProductId));
+        }
     });
     var currentService = 'rally.status_update';
     var rallyService = RallyServiceHelper.rallyService(currentService);
