@@ -121,6 +121,28 @@
                         }
                     ]
                 }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-SessionsCLeanup",
+                "module": "plugin_rally/cartridge/scripts/jobs/sessionCleanup.js",
+                "function": "sessionsCleanup",
+                "description": "This Job delete old session objects from Custom Objects",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
             }
         ]
     }

@@ -87,9 +87,11 @@ function removeSessionObject(basketId) {
     var CustomObjectMgr = require('dw/object/CustomObjectMgr');
     var Transaction = require('dw/system/Transaction');
     var rallyBasketSessionObject = CustomObjectMgr.getCustomObject('RallySessionBasket', basketId);
-    Transaction.wrap(function () {
-        CustomObjectMgr.remove(rallyBasketSessionObject);
-    });
+    if (rallyBasketSessionObject) {
+        Transaction.wrap(function () {
+            CustomObjectMgr.remove(rallyBasketSessionObject);
+        });
+    }
 }
 
 module.exports = {

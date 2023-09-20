@@ -4,6 +4,7 @@
         <display-name xml:lang="x-default">RallySessionBasket</display-name>
         <staging-mode>no-staging</staging-mode>
         <storage-scope>site</storage-scope>
+        <retention-days>1</retention-days>
         <key-definition attribute-id="basketId">
             <type>string</type>
             <min-length>0</min-length>
