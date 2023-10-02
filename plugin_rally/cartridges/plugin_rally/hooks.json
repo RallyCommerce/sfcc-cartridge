@@ -107,6 +107,10 @@
         {
             "name": "dw.ocapi.shop.basket.price_adjustment.beforePATCH",
             "script": "./cartridge/scripts/hooks/basketPriceAdjustmentsHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.payment_instrument.afterPATCH",
+            "script": "./cartridge/scripts/hooks/orderPaymentsHooks.js"
         }
     ]
 }

@@ -27,6 +27,7 @@
         rallyCheckoutData.currency = "${session.currency.currencyCode}";
         <isif condition="${customer !== null}">
         var customerData = {
+            externalCustomerId: '${customer.getCustomerNo()}',
             email: '${customer.getEmail()}',
             firstName: '${customer.getFirstName()}',
             lastName: '${customer.getLastName()}',

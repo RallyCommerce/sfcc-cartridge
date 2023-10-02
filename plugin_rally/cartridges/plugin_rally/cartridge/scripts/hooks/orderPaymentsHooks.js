@@ -27,3 +27,11 @@ exports.beforePOST = function (order, newPaymentInstrument) {
 
     return new Status(Status.OK);
 };
+
+exports.afterPATCH = function (order, paymentInstrument, newPaymentInstrument, successfullyAuthorized) {
+    if (newPaymentInstrument.payment_method_id.toLowerCase() === 'rally' && !newPaymentInstrument.amount) {
+        successfullyAuthorized === false;
+    }
+
+    return new Status(Status.OK);
+};
