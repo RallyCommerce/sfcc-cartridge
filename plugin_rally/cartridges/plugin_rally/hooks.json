@@ -83,6 +83,30 @@
         {
             "name": "dw.ocapi.shop.basket.coupon.beforeDELETE",
             "script": "./cartridge/scripts/hooks/basketCouponHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.note.beforePOST",
+            "script": "./cartridge/scripts/hooks/basketNotesHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.note.beforeGET",
+            "script": "./cartridge/scripts/hooks/basketNotesHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.note.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/basketNotesHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.price_adjustment.beforePOST",
+            "script": "./cartridge/scripts/hooks/basketPriceAdjustmentsHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.price_adjustment.beforeDELETE",
+            "script": "./cartridge/scripts/hooks/basketPriceAdjustmentsHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.price_adjustment.beforePATCH",
+            "script": "./cartridge/scripts/hooks/basketPriceAdjustmentsHooks.js"
         }
     ]
 }
