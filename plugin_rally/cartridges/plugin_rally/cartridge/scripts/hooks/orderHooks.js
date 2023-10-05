@@ -65,6 +65,7 @@ exports.beforePATCH = function (order, orderInput) {
         if (order.status.displayValue.toUpperCase() === 'CREATED' && orderInput.status.toUpperCase() === 'NEW') {
             Logger.warn('Start placing Order: ' + order.getCurrentOrderNo());
             OrderMgr.placeOrder(order);
+            order.setExportStatus(Order.EXPORT_STATUS_READY);
             Logger.warn('End placing Order: ' + order.getCurrentOrderNo());
         }
         // stop temporary order and give basket back
@@ -77,7 +78,6 @@ exports.beforePATCH = function (order, orderInput) {
                 OrderMgr.cancelOrder(order);
             });
         }
-        order.setExportStatus(Order.EXPORT_STATUS_READY);
         // Update Rally order statuses
         order.custom.statusSentToRally = order.getStatus().getValue();
         order.custom.lastShipStatusSentToRally = order.getShippingStatus().getValue();

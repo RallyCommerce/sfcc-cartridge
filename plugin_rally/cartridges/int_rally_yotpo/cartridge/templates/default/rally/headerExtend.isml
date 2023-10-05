@@ -1,0 +1,8 @@
+<isif condition="${pdict.isCartridgeEnabled && pdict.yotpoCartTokken}">
+    <script>
+        var rallyCheckoutData = window.RallyCheckoutData || {};
+        if (rallyCheckoutData.customerData) {
+            rallyCheckoutData.customerData.externalCartToken = encodeURIComponent('${pdict.yotpoCartTokken}');
+        }
+    </script>
+</isif>

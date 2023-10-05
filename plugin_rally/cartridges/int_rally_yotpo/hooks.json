@@ -1,0 +1,12 @@
+{
+    "hooks": [
+        {
+            "name": "dw.ocapi.shop.order.afterPATCH",
+            "script": "./cartridge/scripts/rallyExtensions/yotpoOrderHooks.js"
+        },
+        {
+            "name": "app.template.htmlHead",
+            "script": "./cartridge/scripts/header/rallyCheckoutData.js"
+        }
+    ]
+}
