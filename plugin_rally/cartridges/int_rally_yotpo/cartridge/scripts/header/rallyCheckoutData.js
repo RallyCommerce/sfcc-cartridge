@@ -20,7 +20,7 @@ function htmlHead(params) {
         if (isLoyaltyEnabled) {
             var BasketMgr = require('dw/order/BasketMgr');
             var currentBasket = BasketMgr.getCurrentBasket();
-            if (currentBasket && session.isCustomerAuthenticated() && session.getCustomer().getProfile()) {
+            if (currentBasket) {
                 var CommonModel = require('*/cartridge/models/common/commonModel');
                 var basketDetails = CommonModel.getCurrentBasketDetails(currLocale);
                 templateParams.yotpoCartTokken = basketDetails.basketTokken;
