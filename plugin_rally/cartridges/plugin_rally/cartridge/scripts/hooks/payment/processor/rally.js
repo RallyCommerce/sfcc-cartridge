@@ -38,7 +38,7 @@ function Refund(invoice) {
     var amount = invoice.getGrandTotal().getGrossPrice().getValue();
 
     var data = {};
-    data.external_id = invoice.getID();
+    data.external_id = invoice.getInvoiceNumber();
     data.external_order_id = order.getCurrentOrderNo();
     data.amount = amount;
     data.transaction_id = transactionID;
