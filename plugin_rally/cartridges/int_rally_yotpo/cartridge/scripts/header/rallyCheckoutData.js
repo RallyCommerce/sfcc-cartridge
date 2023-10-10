@@ -1,9 +1,9 @@
 'use strict';
 
 /**
- * Renders yotpo scripts inline using ISML.renderTemplate
+ * Renders rally scripts inline using ISML.renderTemplate
  *
- * @param {Object} params - parameters required by yotpoHeader isml template
+ * @param {Object} params - parameters required by headerExtend isml template
  */
 function htmlHead(params) {
     var ISML = require('dw/template/ISML');
@@ -24,6 +24,7 @@ function htmlHead(params) {
                 var CommonModel = require('*/cartridge/models/common/commonModel');
                 var basketDetails = CommonModel.getCurrentBasketDetails(currLocale);
                 templateParams.yotpoCartTokken = basketDetails.basketTokken;
+                templateParams.isCartridgeEnabled = isCartridgeEnabled;
             }
         }
         try {

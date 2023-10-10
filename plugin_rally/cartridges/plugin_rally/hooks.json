@@ -111,6 +111,10 @@
         {
             "name": "dw.ocapi.shop.order.payment_instrument.afterPATCH",
             "script": "./cartridge/scripts/hooks/orderPaymentsHooks.js"
+        },
+        {
+            "name": "app.payment.processor.rally",
+            "script": "./cartridge/scripts/hooks/payment/processor/rally"
         }
     ]
 }
