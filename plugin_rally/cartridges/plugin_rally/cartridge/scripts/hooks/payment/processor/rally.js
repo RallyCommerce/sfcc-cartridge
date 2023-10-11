@@ -1,7 +1,6 @@
 'use strict';
 var Resource = require('dw/web/Resource');
 var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
-var Transaction = require('dw/system/Transaction');
 
 /**
  * Rally payment hook isn't supported on Storefront
@@ -54,10 +53,8 @@ function Refund(invoice) {
     var responseData = rallyService.call(params);
 
     if (responseData && responseData.ok === true) {
-        Transaction.wrap(function () {
-            paymentTransaction.setType(paymentTransaction.TYPE_CREDIT);
-            Logger.debug('Rally Orders refund API successfully executed for order No: {0}', order.orderNo);
-        });
+        paymentTransaction.setType(paymentTransaction.TYPE_CREDIT);
+        Logger.debug('Rally Orders refund API successfully executed for order No: {0}', order.orderNo);
         return { success: true };
     }
 
@@ -66,6 +63,12 @@ function Refund(invoice) {
     return { success: false };
 }
 
+/**
+ *
+ * @param {Object} order Order object
+ * @param {Object} paypalTransaction Payment Transaction to release Auth
+ * @return {Object} an object that contains success/error information
+ */
 function Release(order, paypalTransaction) {
     var paymentTransaction = !empty(paypalTransaction) ? paypalTransaction : order.getPaymentTransaction();
     var transactionID = paymentTransaction.getTransactionID();
@@ -86,10 +89,8 @@ function Release(order, paypalTransaction) {
     var responseData = rallyService.call(params);
 
     if (responseData && responseData.ok === true) {
-        Transaction.wrap(function () {
-            paymentTransaction.setTransactionID(responseData.object.authorizationid);
-            paymentTransaction.setType(paymentTransaction.TYPE_AUTH_REVERSAL);
-        });
+        paymentTransaction.setTransactionID(responseData.object.authorizationid);
+        paymentTransaction.setType(paymentTransaction.TYPE_AUTH_REVERSAL);
         return { success: true };
     }
     return { success: false };
