@@ -75,7 +75,7 @@ var checkLevels = function (args) {
             } else {
                 var pam = product.getAvailabilityModel();
                 var inventoryRecord = pam.getInventoryRecord();
-                if (inventoryRecord && inventoryRecord.getLastModified() > lastUpdateTime && (!empty(productsArray) && !checkForDuplicates(productsArray, product.getID()))) {
+                if (inventoryRecord && inventoryRecord.getLastModified() > lastUpdateTime && !checkForDuplicates(productsArray, product.getID())) {
                     var masterProductId = product.isVariant() ? product.getMasterProduct().getID() : null;
                     productsArray.push(createProductStockLine(product.getID(), inventoryRecord, masterProductId));
                 }

@@ -10,8 +10,8 @@ module.exports = {
                 }
             } else if (data.action === 'Cart-RemoveProductLineItem') {
                 window.RallyCheckoutData.id = data.basket.basketId;
-                if (data.cart.yotpoCartTokken && window.RallyCheckoutData.customerData) {
-                    window.RallyCheckoutData.customerData.externalCartToken = encodeURIComponent(data.cart.yotpoCartTokken);
+                if (data.basket.yotpoCartTokken && window.RallyCheckoutData.customerData) {
+                    window.RallyCheckoutData.customerData.externalCartToken = encodeURIComponent(data.basket.yotpoCartTokken);
                 }
             }
         });
