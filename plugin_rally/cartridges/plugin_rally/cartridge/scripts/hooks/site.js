@@ -11,10 +11,12 @@ exports.modifyGETResponse = function (doc) {
         message: taxPolicy
     });
     var globalShippingCountries = Site.getCurrent().getCustomPreferenceValue('rallyShippingCountriesConfig');
-    doc.addFlash({
-        type: 'ShippingCountries',
-        message: globalShippingCountries
-    });
+    if (globalShippingCountries) {
+        doc.addFlash({
+            type: 'ShippingCountries',
+            message: globalShippingCountries
+        });
+    }
 
     return new Status(Status.OK);
 };
