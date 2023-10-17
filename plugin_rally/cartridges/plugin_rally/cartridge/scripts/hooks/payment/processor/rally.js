@@ -66,12 +66,16 @@ function Refund(invoice) {
 /**
  *
  * @param {Object} order Order object
- * @param {Object} paypalTransaction Payment Transaction to release Auth
+ * @param {Object} rallyTransaction Payment Transaction to release Auth
  * @return {Object} an object that contains success/error information
  */
-function Release(order, paypalTransaction) {
-    var paymentTransaction = !empty(paypalTransaction) ? paypalTransaction : order.getPaymentTransaction();
-    var transactionID = paymentTransaction.getTransactionID();
+function Release(order, rallyTransaction) {
+    var paymentTransaction = !empty(rallyTransaction) ? rallyTransaction : '';
+    var paymentInstrument = order.getPaymentInstruments('Rally').iterator().next();
+    if (empty(paymentTransaction)) {
+        paymentTransaction = paymentInstrument.getPaymentTransaction();
+    }
+    var transactionID = paymentInstrument.custom.rallyExternalId;
 
     var data = {};
     data.external_id = order.getCurrentOrderNo();
@@ -89,7 +93,7 @@ function Release(order, paypalTransaction) {
     var responseData = rallyService.call(params);
 
     if (responseData && responseData.ok === true) {
-        paymentTransaction.setTransactionID(responseData.object.authorizationid);
+        // paymentTransaction.setTransactionID(responseData.object.authorizationid);
         paymentTransaction.setType(paymentTransaction.TYPE_AUTH_REVERSAL);
         return { success: true };
     }
