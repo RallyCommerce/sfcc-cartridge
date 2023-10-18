@@ -43,10 +43,45 @@ function sendConfirmationMail(order) {
     Logger.warn('Rally email start for: ' + order.getCurrentOrderNo());
     try {
         var enableLocalConfirmationEmail = Site.getCurrent().getCustomPreferenceValue('rallyEnableConfirmationEmail');
-        if (order.getCustomerEmail() && enableLocalConfirmationEmail) {
-            COHelpers.sendConfirmationEmail(order, order.getCustomerLocaleID());
-            Logger.warn('After Send Confirmation Email for Order: ' + order.getCurrentOrderNo());
-            return true;
+        var enableCustomHookEmail = Site.getCurrent().getCustomPreferenceValue('rallyEnableCustomHookEmail');
+        if (order.getCustomerEmail()) {
+            if (enableLocalConfirmationEmail && !enableCustomHookEmail) {
+                COHelpers.sendConfirmationEmail(order, order.getCustomerLocaleID());
+                Logger.warn('After Send Confirmation Email for Order: ' + order.getCurrentOrderNo());
+                return true;
+            } else if (enableCustomHookEmail) {
+                var hookSettings = Site.getCurrent().getCustomPreferenceValue('rallyCustomEmailHookSettings');
+                if (!empty(hookSettings)) {
+                    var hookObj = JSON.parse(hookSettings);
+                    var HookMgr = require('dw/system/HookMgr');
+                    if (HookMgr.hasHook(hookObj.extensionPoint)) {
+                        var params = hookObj.params;
+                        params.forEach(function (element, index) {
+                            if (element === 'order') {
+                                params[index] = order;
+                            }
+                        });
+                        var hookResult = '';
+                        switch (params.length) {
+                            case 1:
+                                hookResult = HookMgr.callHook(hookObj.extensionPoint, hookObj.functionName, params[0]);
+                                break;
+                            case 2:
+                                hookResult = HookMgr.callHook(hookObj.extensionPoint, hookObj.functionName, params[0], params[1]);
+                                break;
+                            case 3:
+                                hookResult = HookMgr.callHook(hookObj.extensionPoint, hookObj.functionName, params[0], params[1], params[2]);
+                                break;
+                            default:
+                                break;
+                        }
+                        if (!hookResult) {
+                            return false;
+                        }
+                        return true;
+                    }
+                }
+            }
         }
     } catch (e) {
         Logger.warn('Confirmation Email error: ' + e.message);
@@ -188,3 +223,5 @@ exports.beforePOST = function (basket) {
     }
     return new Status(Status.OK);
 };
+
+exports.sendConfirmationMail = sendConfirmationMail;

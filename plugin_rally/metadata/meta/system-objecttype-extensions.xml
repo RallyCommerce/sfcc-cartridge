@@ -200,11 +200,24 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
             </attribute-definition>
+            <attribute-definition attribute-id="rallyCustomEmailHookSettings">
+                <display-name xml:lang="x-default">Custom Confirmation Email Hook Configuration</display-name>
+                <type>text</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
             <attribute-definition attribute-id="rallyEnableConfirmationEmail">
                 <display-name xml:lang="x-default">SFRA Confirmation Emails Enabled</display-name>
                 <type>boolean</type>
                 <mandatory-flag>false</mandatory-flag>
                 <externally-managed-flag>false</externally-managed-flag>
+            </attribute-definition>
+            <attribute-definition attribute-id="rallyEnableCustomHookEmail">
+                <display-name xml:lang="x-default">Enable Custom Confirmation Email Hook</display-name>
+                <type>boolean</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>false</default-value>
             </attribute-definition>
             <attribute-definition attribute-id="rallyEnabled">
                 <display-name xml:lang="x-default">Rally Checkout Online</display-name>
@@ -260,6 +273,8 @@
                 <attribute attribute-id="rallySecret"/>
                 <attribute attribute-id="rallyScriptSource"/>
                 <attribute attribute-id="rallyEnableConfirmationEmail"/>
+                <attribute attribute-id="rallyEnableCustomHookEmail"/>
+                <attribute attribute-id="rallyCustomEmailHookSettings"/>
                 <attribute attribute-id="rallyShippingCountriesConfig"/>
             </attribute-group>
         </group-definitions>
