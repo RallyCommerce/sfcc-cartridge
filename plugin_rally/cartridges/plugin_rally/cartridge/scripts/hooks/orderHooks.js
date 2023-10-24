@@ -138,6 +138,7 @@ exports.beforePATCH = function (order, orderInput) {
                 productLineItem.setPriceValue(ppoProduct.price.get());
                 productLineItem.setTaxRate(ppoProduct.tax_rate.get());
                 productLineItem.updateTax(productLineItem.getTaxRate());
+                productLineItem.custom.rallyIsPPOItem = true;
             } else {
                 var oosProductDetails = {
                     product_id: ppoProduct.product_id,
@@ -150,6 +151,8 @@ exports.beforePATCH = function (order, orderInput) {
             return returnStatus;
         }
         order.updateTotals();
+        OrderMgr.failOrder(order, false); // fail and undoFail to get correct inventory locked
+        OrderMgr.undoFailOrder(order);
     }
 
     if (orderInput.shipping_items && orderInput.shipping_items.length > 0) {
@@ -220,6 +223,26 @@ exports.beforePOST = function (basket) {
         var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
         rallyHelper.updateCustomSessionVariables(basket.UUID);
         request.session.custom.basketId = basket.UUID;
+    }
+    return new Status(Status.OK);
+};
+
+exports.modifyPATCHResponse = function (order, orderResponse) {
+    if (order.shippingOrders.length > 0) {
+        var lineItems = orderResponse.product_items ? orderResponse.product_items.toArray() : [];
+        if (lineItems.length > 0) {
+            lineItems.forEach(function (lineItem) {
+                var orderItem = order.getOrderItem(lineItem.item_id.toString());
+                // var pli = order.getProductLineItems(lineItem.product_id).iterator().next();
+                // var orderItem = pli.orderItem;
+                if (orderItem) {
+                    lineItem.c_status = orderItem.status.value;
+                }
+                // if (index === 1) {
+                //     lineItem.c_status = 'CANCELLED';
+                // }
+            });
+        }
     }
     return new Status(Status.OK);
 };

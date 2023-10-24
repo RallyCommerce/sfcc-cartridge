@@ -115,6 +115,10 @@
         {
             "name": "app.payment.processor.rally",
             "script": "./cartridge/scripts/hooks/payment/processor/rally"
+        },
+        {
+            "name": "dw.ocapi.shop.order.modifyPATCHResponse",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
         }
     ]
 }

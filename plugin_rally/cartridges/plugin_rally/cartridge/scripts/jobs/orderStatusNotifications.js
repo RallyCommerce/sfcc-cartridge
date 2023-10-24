@@ -56,10 +56,6 @@ var execute = function (args) {
                     orderStatus: orderStatusMap[order.getStatus().getValue()]
                 };
                 ordersArray.push(orderObject);
-                // eslint-disable-next-line no-loop-func
-                Transaction.wrap(function () {
-                    order.custom.statusSentToRally = order.getStatus().getValue();
-                });
             }
             if (order.custom.lastShipStatusSentToRally.value !== order.getShippingStatus().getValue()) {
                 // eslint-disable-next-line no-loop-func
@@ -75,10 +71,6 @@ var execute = function (args) {
                     };
                     ordersArray.push(shippingOrderObject);
                 }
-                // eslint-disable-next-line no-loop-func
-                Transaction.wrap(function () {
-                    order.custom.lastShipStatusSentToRally = order.getShippingStatus().getValue();
-                });
             }
         }
         if (!empty(ordersArray)) {
@@ -98,6 +90,11 @@ var execute = function (args) {
             if (callsResult) {
                 Transaction.wrap(function () {
                     customPreferences.custom.rallyOrderStatusDate = newRunDate;
+                    ordersArray.forEach(function (sentOrder) {
+                        var orderToUpdate = OrderMgr.getOrder(sentOrder.orderId);
+                        orderToUpdate.custom.statusSentToRally = orderToUpdate.getStatus().getValue();
+                        orderToUpdate.custom.lastShipStatusSentToRally = orderToUpdate.getShippingStatus().getValue();
+                    });
                 });
                 return new Status(Status.OK, 'OK');
             }
