@@ -232,15 +232,14 @@ exports.modifyPATCHResponse = function (order, orderResponse) {
         var lineItems = orderResponse.product_items ? orderResponse.product_items.toArray() : [];
         if (lineItems.length > 0) {
             lineItems.forEach(function (lineItem) {
-                var orderItem = order.getOrderItem(lineItem.item_id.toString());
-                // var pli = order.getProductLineItems(lineItem.product_id).iterator().next();
-                // var orderItem = pli.orderItem;
+                var plis = order.getProductLineItems(lineItem.product_id);
+                var collections = require('*/cartridge/scripts/util/collections');
+                var pli = collections.find(plis,
+                    function (item) { return item.UUID === lineItem.item_id; });
+                var orderItem = pli.orderItem;
                 if (orderItem) {
                     lineItem.c_status = orderItem.status.value;
                 }
-                // if (index === 1) {
-                //     lineItem.c_status = 'CANCELLED';
-                // }
             });
         }
     }
