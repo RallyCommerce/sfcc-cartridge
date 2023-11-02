@@ -6,6 +6,7 @@ var collections = require('*/cartridge/scripts/util/collections');
 var Transaction = require('dw/system/Transaction');
 var StringUtils = require('dw/util/StringUtils');
 var Logger = require('dw/system/Logger').getLogger('rally.products.updates');
+var ProductFactory = require('*/cartridge/scripts/factories/product');
 var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
 var atributesList = ['name', 'longDescription', 'manufacturerName', 'shortDescription'];
 
@@ -23,6 +24,8 @@ function createProductPayload(product) {
 }
 
 function createAttributesHash(product) {
+    var params = { pid: product.getID() };
+    var modelProduct = ProductFactory.get(params);
     var stringForHash = '';
     var MessageDigest = require('dw/crypto/MessageDigest');
     var Bytes = require('dw/util/Bytes');
@@ -30,11 +33,11 @@ function createAttributesHash(product) {
         var attrName = atributesList[i];
         stringForHash += StringUtils.encodeBase64(product[attrName]);
     }
-    if (product.isVariant()) {
+    if (!product.isMaster() || !product.isBundle() || !product.isProductSet()) {
         stringForHash += StringUtils.encodeBase64(product.getPriceModel().getPrice().getValue());
     }
-    if (product.getImage('large')) {
-        stringForHash += StringUtils.encodeBase64(product.getImage('large').getAbsURL().toString());
+    if (modelProduct.images) {
+        stringForHash += StringUtils.encodeBase64(JSON.stringify(modelProduct.images));
     }
 
     if (product.isMaster()) {
@@ -141,8 +144,8 @@ var productUpdates = function (args) {
                 return new Status(Status.OK, 'OK');
             }
 
-            Logger.error('productUpdates.js : Error while calling service Products Update: ' + result.error);
-            return new Status(Status.ERROR, 'ERROR', result.error);
+            Logger.error('productUpdates.js : Error while calling service Products Update: ' + result[result.length - 1].error);
+            return new Status(Status.ERROR, 'ERROR', result[result.length - 1].error);
         }
 
         return new Status(Status.OK, 'OK');
