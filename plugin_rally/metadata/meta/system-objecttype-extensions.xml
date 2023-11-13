@@ -206,6 +206,13 @@
                 <externally-managed-flag>false</externally-managed-flag>
                 <min-length>0</min-length>
             </attribute-definition>
+            <attribute-definition attribute-id="rallyCookieToOrderMapping">
+                <display-name xml:lang="x-default">Cookie to order attributes mapping</display-name>
+                <type>text</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
             <attribute-definition attribute-id="rallyCustomEmailHookSettings">
                 <display-name xml:lang="x-default">Custom Confirmation Email Hook Configuration</display-name>
                 <type>text</type>
@@ -282,6 +289,7 @@
                 <attribute attribute-id="rallyEnableCustomHookEmail"/>
                 <attribute attribute-id="rallyCustomEmailHookSettings"/>
                 <attribute attribute-id="rallyShippingCountriesConfig"/>
+                <attribute attribute-id="rallyCookieToOrderMapping"/>
             </attribute-group>
         </group-definitions>
     </type-extension>
