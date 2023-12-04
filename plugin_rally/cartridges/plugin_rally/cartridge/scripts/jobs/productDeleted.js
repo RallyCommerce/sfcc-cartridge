@@ -107,8 +107,8 @@ var productDeleted = function (args) {
                 return new Status(Status.OK, 'OK');
             }
 
-            Logger.error('productDeleted.js : Error while calling service Products Delete: ' + result.error);
-            return new Status(Status.ERROR, 'ERROR', result.error);
+            Logger.error('productDeleted.js : Error while calling service Products Delete: ' + result[result.length - 1].error);
+            return new Status(Status.ERROR, 'ERROR', result[result.length - 1].error);
         }
 
         return new Status(Status.OK, 'OK');

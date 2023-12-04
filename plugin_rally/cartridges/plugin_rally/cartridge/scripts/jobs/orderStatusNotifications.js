@@ -99,8 +99,8 @@ var execute = function (args) {
                 return new Status(Status.OK, 'OK');
             }
 
-            Logger.error('orderStatusNotifications.js : Error while calling service OSU: ' + result.error);
-            return new Status(Status.ERROR, 'ERROR', result.error);
+            Logger.error('orderStatusNotifications.js : Error while calling service OSU: ' + result[result.length - 1].error);
+            return new Status(Status.ERROR, 'ERROR', result[result.length - 1].error);
         }
         return new Status(Status.OK, 'OK');
     } catch (e) {

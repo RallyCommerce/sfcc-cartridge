@@ -102,8 +102,8 @@ var checkLevels = function (args) {
                 return new Status(Status.OK, 'OK');
             }
 
-            Logger.error('checkStockLevels.js : Error while calling service Stock Status Update: ' + result.error);
-            return new Status(Status.ERROR, 'ERROR', result.error);
+            Logger.error('checkStockLevels.js : Error while calling service Stock Status Update: ' + result[result.length - 1].error);
+            return new Status(Status.ERROR, 'ERROR', result[result.length - 1].error);
         }
 
         return new Status(Status.OK, 'OK');

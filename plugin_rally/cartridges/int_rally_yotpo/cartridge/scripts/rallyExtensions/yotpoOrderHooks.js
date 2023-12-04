@@ -9,12 +9,16 @@ exports.afterPATCH = function (order, orderInput) {
         if (isLoyaltyEnabled) {
             if (orderInput.status && orderInput.status.toUpperCase() === 'NEW') {
                 if (order.status.displayValue.toUpperCase() === 'NEW') {
-                    var LoyaltyCOCreator = require('*/cartridge/scripts/loyalty/export/loyaltyOrderCO');
-                    LoyaltyCOCreator.createLoyaltyOrderCO({
-                        orderNo: order.getCurrentOrderNo(),
-                        orderState: 'created',
-                        locale: order.getCustomerLocaleID()
-                    });
+                    try {
+                        var LoyaltyCOCreator = require('*/cartridge/scripts/loyalty/export/loyaltyOrderCO');
+                        LoyaltyCOCreator.createLoyaltyOrderCO({
+                            orderNo: order.getCurrentOrderNo(),
+                            orderState: 'created',
+                            locale: order.getCustomerLocaleID()
+                        });
+                    } catch (ex) {
+                        // Errors creating CO are already being captured in loyaltyOrderCO
+                    }
                 }
             }
         }

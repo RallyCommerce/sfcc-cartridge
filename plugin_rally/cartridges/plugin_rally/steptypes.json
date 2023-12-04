@@ -143,6 +143,28 @@
                         }
                     ]
                 }
+            },
+            {
+                "@type-id": "custom.RallyCheckout-CategoryUpdates",
+                "module": "plugin_rally/cartridge/scripts/jobs/categoryUpdates.js",
+                "function": "categoryUpdates",
+                "description": "This Job iterates through Site Categories and send updates to Rally",
+                "status-codes": {
+                    "status": [
+                        {
+                            "@code": "ERROR",
+                            "description": "Used when an error occurred."
+                        },
+                        {
+                            "@code": "OK",
+                            "description": "Used when everything went well."
+                        },
+                        {
+                            "@code": "WARN",
+                            "description": "Used when small, but acceptable problems occurred."
+                        }
+                    ]
+                }
             }
         ]
     }

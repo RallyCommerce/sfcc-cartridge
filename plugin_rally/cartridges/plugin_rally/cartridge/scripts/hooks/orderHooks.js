@@ -94,13 +94,16 @@ exports.beforePATCH = function (order, orderInput) {
     var collections = require('*/cartridge/scripts/util/collections');
     var OrderMgr = require('dw/order/OrderMgr');
     var Order = require('dw/order/Order');
+    var placeReturnStatus = new Status(Status.OK);
     if (orderInput.status) {
         var Transaction = require('dw/system/Transaction');
         // finalize order
         if (order.status.displayValue.toUpperCase() === 'CREATED' && orderInput.status.toUpperCase() === 'NEW') {
             Logger.warn('Start placing Order: ' + order.getCurrentOrderNo());
-            OrderMgr.placeOrder(order);
-            order.setExportStatus(Order.EXPORT_STATUS_READY);
+            placeReturnStatus = OrderMgr.placeOrder(order);
+            if (placeReturnStatus.getStatus() === Status.OK) {
+                order.setExportStatus(Order.EXPORT_STATUS_READY);
+            }
             Logger.warn('End placing Order: ' + order.getCurrentOrderNo());
         }
         // stop temporary order and give basket back
@@ -117,10 +120,10 @@ exports.beforePATCH = function (order, orderInput) {
         order.custom.statusSentToRally = order.getStatus().getValue();
         order.custom.lastShipStatusSentToRally = order.getShippingStatus().getValue();
     }
-    if (orderInput.payment_status && orderInput.payment_status.toUpperCase() === 'PAID') {
+    if (orderInput.payment_status && orderInput.payment_status.toUpperCase() === 'PAID' && placeReturnStatus.getStatus() === Status.OK) {
         order.setPaymentStatus(Order.PAYMENT_STATUS_PAID);
     }
-    if (orderInput.confirmation_status && orderInput.confirmation_status.toUpperCase() === 'CONFIRMED') {
+    if (orderInput.confirmation_status && orderInput.confirmation_status.toUpperCase() === 'CONFIRMED' && placeReturnStatus.getStatus() === Status.OK) {
         order.setConfirmationStatus(Order.CONFIRMATION_STATUS_CONFIRMED);
     }
 
@@ -131,14 +134,43 @@ exports.beforePATCH = function (order, orderInput) {
         var returnStatus = new Status(Status.ERROR, 'out_of_stock', 'There isn\'t enough stock.', {});
         ppoProducts.forEach(function (ppoProduct) {
             var product = ProductMgr.getProduct(ppoProduct.product_id);
+            var productOptionModel = null;
+            if (product.isOptionProduct()) {
+                productOptionModel = product.getOptionModel();
+            }
             var qty = parseInt(ppoProduct.quantity.toString(), 10);
             if (product.getAvailabilityModel().getInventoryRecord().getStockLevel().value >= qty) {
-                var productLineItem = order.createProductLineItem(ppoProduct.product_id, defaultShipment);
+                if (ppoProduct.option_items && ppoProduct.option_items.length > 0) {
+                    ppoProduct.option_items.forEach(function(optionItem) {
+                        var productOption = productOptionModel.getOption(optionItem.option_id);
+                        var productOptionValue = productOptionModel.getOptionValue(productOption, optionItem.option_value_id);
+                        productOptionModel.setSelectedOptionValue(productOption, productOptionValue);
+                    });
+                } else if (!ppoProduct.option_items && productOptionModel) {
+                    var productOptions = productOptionModel.getOptions();
+                    var POIterator = productOptions.iterator();
+                    while (POIterator.hasNext()) {
+                        var productOption = POIterator.next();
+                        var productOptionValue = productOptionModel.getOptionValue(productOption, productOption.getDefaultValue());
+                        productOptionModel.setSelectedOptionValue(productOption, productOptionValue);
+                    }
+                }
+                var productLineItem = order.createProductLineItem(product, productOptionModel, defaultShipment);
                 productLineItem.setQuantityValue(qty);
                 productLineItem.setPriceValue(ppoProduct.price.get());
                 productLineItem.setTaxRate(ppoProduct.tax_rate.get());
                 productLineItem.updateTax(productLineItem.getTaxRate());
                 productLineItem.custom.rallyIsPPOItem = true;
+                if (productOptionModel) {
+                    var optionLineItemsCollection = productLineItem.getOptionProductLineItems();
+                    var optionsIterator = optionLineItemsCollection.iterator();
+                    while (optionsIterator.hasNext()) {
+                        var optionLineItem = optionsIterator.next();
+                        optionLineItem.updateOptionPrice();
+                        optionLineItem.setTaxRate(ppoProduct.tax_rate.get());
+                        optionLineItem.updateTax(productLineItem.getTaxRate(), optionLineItem.getPrice());
+                    }
+                }
             } else {
                 var oosProductDetails = {
                     product_id: ppoProduct.product_id,
@@ -156,10 +188,12 @@ exports.beforePATCH = function (order, orderInput) {
     }
 
     if (orderInput.shipping_items && orderInput.shipping_items.length > 0) {
+        var ShippingMgr = require('dw/order/ShippingMgr');
+        var defaultShippingMethod = ShippingMgr.getDefaultShippingMethod();
         var inputShippingItems = orderInput.shipping_items.toArray();
         inputShippingItems.forEach(function (inputShippingItem) {
             var shipment = order.getShipment(inputShippingItem.shipmentId);
-            var uuid = inputShippingItem.itemId || 'FLAT_RATE';
+            var uuid = inputShippingItem.itemId || defaultShippingMethod.getID();
             var taxClassID = inputShippingItem.taxClassId;
             var shippingLI = collections.find(shipment.getAllLineItems(), function (item) {
                 return item.UUID === uuid;
@@ -187,7 +221,7 @@ exports.beforePATCH = function (order, orderInput) {
         });
         order.updateTotals();
     }
-    return new Status(Status.OK);
+    return placeReturnStatus;
 };
 
 // eslint-disable-next-line no-unused-vars

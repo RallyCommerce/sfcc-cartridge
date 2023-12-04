@@ -199,6 +199,12 @@
 
     <type-extension type-id="SitePreferences">
         <custom-attribute-definitions>
+            <attribute-definition attribute-id="rallyCategoryDate">
+                <display-name xml:lang="x-default">Date to start category checks</display-name>
+                <type>datetime</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>true</externally-managed-flag>
+            </attribute-definition>
             <attribute-definition attribute-id="rallyClientID">
                 <display-name xml:lang="x-default">Rally Client ID</display-name>
                 <type>string</type>
