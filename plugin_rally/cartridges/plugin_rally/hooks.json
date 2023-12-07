@@ -119,6 +119,10 @@
         {
             "name": "dw.ocapi.shop.order.modifyPATCHResponse",
             "script": "./cartridge/scripts/hooks/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.order.modifyGETResponse",
+            "script": "./cartridge/scripts/hooks/orderHooks.js"
         }
     ]
 }

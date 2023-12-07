@@ -90,13 +90,31 @@ function sendConfirmationMail(order) {
     return false;
 }
 
+function extendOrderResponse(order, orderResponse) {
+    if (order.shippingOrders.length > 0) {
+        var lineItems = orderResponse.product_items ? orderResponse.product_items.toArray() : [];
+        if (lineItems.length > 0) {
+            lineItems.forEach(function (lineItem) {
+                var plis = order.getProductLineItems(lineItem.product_id);
+                var collections = require('*/cartridge/scripts/util/collections');
+                var pli = collections.find(plis,
+                    function (item) { return item.UUID === lineItem.item_id; });
+                var orderItem = pli.orderItem;
+                if (orderItem) {
+                    lineItem.c_status = orderItem.status.value;
+                }
+            });
+        }
+    }
+    return true;
+}
+
 exports.beforePATCH = function (order, orderInput) {
     var collections = require('*/cartridge/scripts/util/collections');
     var OrderMgr = require('dw/order/OrderMgr');
     var Order = require('dw/order/Order');
     var placeReturnStatus = new Status(Status.OK);
     if (orderInput.status) {
-        var Transaction = require('dw/system/Transaction');
         // finalize order
         if (order.status.displayValue.toUpperCase() === 'CREATED' && orderInput.status.toUpperCase() === 'NEW') {
             Logger.warn('Start placing Order: ' + order.getCurrentOrderNo());
@@ -112,9 +130,7 @@ exports.beforePATCH = function (order, orderInput) {
         }
 
         if (orderInput.status.toUpperCase() === 'CANCELLED') {
-            Transaction.wrap(function () {
-                OrderMgr.cancelOrder(order);
-            });
+            OrderMgr.cancelOrder(order);
         }
         // Update Rally order statuses
         order.custom.statusSentToRally = order.getStatus().getValue();
@@ -262,21 +278,12 @@ exports.beforePOST = function (basket) {
 };
 
 exports.modifyPATCHResponse = function (order, orderResponse) {
-    if (order.shippingOrders.length > 0) {
-        var lineItems = orderResponse.product_items ? orderResponse.product_items.toArray() : [];
-        if (lineItems.length > 0) {
-            lineItems.forEach(function (lineItem) {
-                var plis = order.getProductLineItems(lineItem.product_id);
-                var collections = require('*/cartridge/scripts/util/collections');
-                var pli = collections.find(plis,
-                    function (item) { return item.UUID === lineItem.item_id; });
-                var orderItem = pli.orderItem;
-                if (orderItem) {
-                    lineItem.c_status = orderItem.status.value;
-                }
-            });
-        }
-    }
+    extendOrderResponse(order, orderResponse);
+    return new Status(Status.OK);
+};
+
+exports.modifyGETResponse = function (order, orderResponse) {
+    extendOrderResponse(order, orderResponse);
     return new Status(Status.OK);
 };
 
