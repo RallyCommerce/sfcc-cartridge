@@ -1,7 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    <type-extension type-id="Basket">
+        <custom-attribute-definitions>
+            <attribute-definition attribute-id="basketId">
+                <display-name xml:lang="x-default">Basket ID</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
+        </custom-attribute-definitions>
+    </type-extension>
     <type-extension type-id="Order">
         <custom-attribute-definitions>
+            <attribute-definition attribute-id="basketId">
+                <display-name xml:lang="x-default">Basket ID</display-name>
+                <type>string</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <min-length>0</min-length>
+            </attribute-definition>
             <attribute-definition attribute-id="lastShipStatusSentToRally">
                 <display-name xml:lang="x-default">Last Shipping Status Sent to Rally</display-name>
                 <type>enum-of-int</type>

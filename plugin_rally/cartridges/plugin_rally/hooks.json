@@ -123,6 +123,10 @@
         {
             "name": "dw.ocapi.shop.order.modifyGETResponse",
             "script": "./cartridge/scripts/hooks/orderHooks.js"
+        },
+        {
+            "name": "dw.ocapi.shop.basket.items.afterPOST",
+            "script": "./cartridge/scripts/hooks/basketItemsHooks.js"
         }
     ]
 }

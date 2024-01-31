@@ -15,5 +15,32 @@ module.exports = {
                 }
             }
         });
+    },
+    updateCheckout: function () {
+        var RallyCheckoutData = window.RallyCheckoutData || {};
+        RallyCheckoutData.refresh = function () {
+            var url = RallyCheckoutData.refreshUrl || '';
+            $.spinner().start();
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function (data) {
+                    var tempSummary = $('<div />');
+                    tempSummary.append(data.order.productSummaryHtml);
+                    var orderSummary = $(tempSummary).find('.order-product-summary')[0];
+                    $('.order-product-summary').html($(orderSummary).html());
+                },
+                error: function () {
+                    $.spinner().stop();
+                }
+            })
+            .done( function (data) {
+                $('body').trigger('checkout:updateCheckoutView',
+                    { order: data.order, customer: data.customer, options: { keepOpen: true } });
+                $.spinner().stop();
+            });
+
+            return true;
+        };
     }
 };

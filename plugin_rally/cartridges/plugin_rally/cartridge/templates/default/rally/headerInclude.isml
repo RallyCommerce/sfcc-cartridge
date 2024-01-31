@@ -16,6 +16,7 @@
     </script>
     <script>
         var rallyCheckoutData = window.RallyCheckoutData || {};
+        rallyCheckoutData.refreshUrl = "${URLUtils.url('RallyCheckout-Get')}";
         var basketId = '${session.privacy.basketId}';
         if (basketId) {
             rallyCheckoutData.id = basketId;

@@ -157,7 +157,7 @@ exports.beforePATCH = function (order, orderInput) {
             var qty = parseInt(ppoProduct.quantity.toString(), 10);
             if (product.getAvailabilityModel().getInventoryRecord().getStockLevel().value >= qty) {
                 if (ppoProduct.option_items && ppoProduct.option_items.length > 0) {
-                    ppoProduct.option_items.forEach(function(optionItem) {
+                    ppoProduct.option_items.forEach(function (optionItem) {
                         var productOption = productOptionModel.getOption(optionItem.option_id);
                         var productOptionValue = productOptionModel.getOptionValue(productOption, optionItem.option_value_id);
                         productOptionModel.setSelectedOptionValue(productOption, productOptionValue);
