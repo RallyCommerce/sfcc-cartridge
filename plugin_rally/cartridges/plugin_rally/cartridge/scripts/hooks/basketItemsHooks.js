@@ -1,7 +1,5 @@
 'use strict';
 
-var Status = require('dw/system/Status');
-
 // eslint-disable-next-line no-unused-vars
 exports.afterPOST = function (basket, items) {
     for (var i = 0; items.length > i; i++) {

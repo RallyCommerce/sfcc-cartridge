@@ -185,158 +185,18 @@ function calculateTaxes(requestBody) {
     return responseObject;
 }
 
-function createApiProductLineItem(pli) {
-    var productType = 'product_item';
-    var apiLineItem = {
-        _type: productType,
-        adjusted_tax: pli.getAdjustedTax().getValueOrNull(),
-        base_price: pli.getBasePrice().getValueOrNull(),
-        bonus_product_line_item: pli.isBonusProductLineItem(),
-        gift: pli.isGift(),
-        item_id: pli.getUUID(),
-        item_text: pli.getLineItemText(),
-        price: pli.getPriceValue(),
-        price_after_item_discount: pli.getAdjustedPrice().getValueOrNull(),
-        price_after_order_discount: pli.getProratedPrice().getValueOrNull(),
-        product_id: pli.getProductID(),
-        product_name: pli.getProductName(),
-        quantity: pli.getQuantityValue(),
-        shipment_id: pli.shipment.getID(),
-        tax: pli.getTax().getValueOrNull(),
-        tax_basis: pli.getTaxBasis().getValueOrNull(),
-        tax_class_id: pli.getTaxClassID(),
-        tax_rate: pli.getTaxRate()
-    };
-    return apiLineItem;
-}
-
-function createApiAddressObject(address) {
-    var returnAddress = {
-        _type: 'order_address',
-        address1: address.getAddress1(),
-        address2: address.getAddress2() || null,
-        city: address.getCity(),
-        country_code: address.getCountryCode().getValue(),
-        first_name: address.getFirstName(),
-        full_name: address.getFullName(),
-        id: address.getUUID(),
-        last_name: address.getLastName(),
-        phone: address.getPhone(),
-        postal_code: address.getPostalCode(),
-        state_code: address.getStateCode()
-    };
-
-    return returnAddress;
-}
-
-function createApiShippingMethod(shipment) {
-    var shippingMethod = shipment.getShippingMethod();
-    var respShipment = {
-        _type: 'shipping_method',
-        description: shippingMethod.getDescription(),
-        id: shippingMethod.getID(),
-        name: shippingMethod.getDisplayName(),
-        price: shipment.getShippingLineItem('STANDARD_SHIPPING').getAdjustedNetPrice().getValueOrNull(),
-        c_estimatedArrivalTime: shippingMethod.custom.estimatedArrivalTime,
-        c_storePickupEnabled: shippingMethod.custom.storePickupEnabled
-    };
-
-    if (shipment.getShippingPriceAdjustments().length > 0) {
-        var shipPromosIterator = shipment.getShippingPriceAdjustments().iterator();
-        respShipment.shipping_promotions = [];
-        while (shipPromosIterator.hasNext()) {
-            var shipPromotion = shipPromosIterator.next();
-            var apiShipPromotion = {
-                _type: 'shipping_promotion',
-                callout_msg: shipPromotion.getPromotion().getCalloutMsg().getMarkup(),
-                link: '',
-                promotion_id: shipPromotion.getPromotion().getID(),
-                promotion_name: shipPromotion.getPromotion().getName()
-            };
-            respShipment.shipping_promotions.push(apiShipPromotion);
-        }
-    }
-
-    return respShipment;
-}
-
-function prepareOrderObject(order) {
-    var defaultShipment = order.getDefaultShipment();
-    var orderResponse = {
-        _type: 'order',
-        confirmation_status: order.getConfirmationStatus().displayValue.toLowerCase(),
-        order_no: order.getOrderNo(),
-        billing_address: createApiAddressObject(order.getBillingAddress()),
-        product_sub_total: defaultShipment.getMerchandizeTotalPrice().getValueOrNull(),
-        tax_total: order.getTotalTax().getValueOrNull(),
-        order_total: order.getTotalGrossPrice().getValueOrNull(),
-        product_items: [],
-        adjusted_merchandize_total_tax: order.getAdjustedMerchandizeTotalTax().getValueOrNull(),
-        status: order.status.displayValue.toLowerCase(),
-        shipments: []
-    };
-    var productsIterator = order.getAllProductLineItems().iterator();
-    while (productsIterator.hasNext()) {
-        var pli = productsIterator.next();
-        var lineItem = createApiProductLineItem(pli);
-        if (pli.isBundledProductLineItem()) {
-            lineItem.bundled_product_items = [];
-            var bundledIterator = pli.getBundledProductLineItems().iterator();
-            while (bundledIterator.hasNext()) {
-                var bundledProductLineItem = bundledIterator.next();
-                var bundledLI = createApiProductLineItem(bundledProductLineItem);
-                bundledLI._type = 'bundle_item'; // eslint-disable-line no-underscore-dangle
-                lineItem.bundled_product_items.push(bundledLI);
-            }
-        }
-        if (pli.isOptionProductLineItem()) {
-            lineItem.option_items = [];
-            var optionsIterator = pli.getOptionProductLineItems().iterator();
-            while (optionsIterator.hasNext()) {
-                var optionProductLineItem = optionsIterator.next();
-                var optionLI = createApiProductLineItem(optionProductLineItem);
-                optionLI._type = 'option_item'; // eslint-disable-line no-underscore-dangle
-                optionLI.option_id = optionProductLineItem.getOptionID();
-                optionLI.option_value_id = optionProductLineItem.getOptionValueID();
-                lineItem.option_items.push(optionLI);
-            }
-        }
-        orderResponse.product_items.push(lineItem);
-    }
-
-    var shipmentsIterator = order.getShipments().iterator();
-    while (shipmentsIterator.hasNext()) {
-        var shipment = shipmentsIterator.next();
-        var respShipment = {
-            _type: 'shipment',
-            adjusted_merchandize_total_tax: shipment.getAdjustedMerchandizeTotalTax().getValueOrNull(),
-            adjusted_shipping_total_tax: shipment.getAdjustedMerchandizeTotalTax().getValueOrNull(),
-            gift: shipment.isGift(),
-            merchandize_total_tax: shipment.getMerchandizeTotalTax().getValueOrNull(),
-            product_sub_total: shipment.getMerchandizeTotalPrice().getValueOrNull(),
-            product_total: shipment.getProratedMerchandizeTotalPrice().getValueOrNull(),
-            shipping_address: createApiAddressObject(shipment.getShippingAddress()),
-            shipment_id: shipment.getID(),
-            shipment_total: shipment.getTotalGrossPrice().getValueOrNull(),
-            shipping_status: shipment.getShippingStatus().getDisplayValue().toLowerCase(),
-            shipping_total: shipment.getStandardShippingLineItem().getAdjustedPrice().getValueOrNull(),
-            shipping_total_tax: shipment.getAdjustedShippingTotalTax().getValueOrNull(),
-            tax_total: shipment.getTotalTax().getValueOrNull()
-        };
-        respShipment.shipping_method = createApiShippingMethod(shipment);
-        orderResponse.shipments.push(respShipment);
-    }
-
-    return orderResponse;
-}
-
 function callCreateOrderHook(orderId) {
     var OrderMgr = require('dw/order/OrderMgr');
     var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
     var currentService = 'rally.status_update';
     var order = OrderMgr.getOrder(orderId);
     var rallyService = RallyServiceHelper.rallyService(currentService);
-    var orderRequest = prepareOrderObject(order);
+    var orderRequest = {
+        orderId: order.getOrderNo()
+    };
+    if (order.custom.basketId) {
+        orderRequest.c_basketId = order.custom.basketId;
+    }
     var params = {
         action: 'orders-create',
         reqBody: {

@@ -18,7 +18,7 @@ module.exports = {
     },
     updateCheckout: function () {
         var RallyCheckoutData = window.RallyCheckoutData || {};
-        RallyCheckoutData.refresh = function () {
+        RallyCheckoutData.refresh = function (callback) {
             var url = RallyCheckoutData.refreshUrl || '';
             $.spinner().start();
             $.ajax({
@@ -38,6 +38,9 @@ module.exports = {
                 $('body').trigger('checkout:updateCheckoutView',
                     { order: data.order, customer: data.customer, options: { keepOpen: true } });
                 $.spinner().stop();
+                if (callback) {
+                    callback();
+                }
             });
 
             return true;
