@@ -24,8 +24,14 @@
         var clientId = "${siteCustomPref.rallyClientID}";
         rallyCheckoutData.fallbackUrl = "${URLUtils.url('Checkout-Begin')}";
         rallyCheckoutData.config = {};
+        rallyCheckoutData.rallyConfig = {};
         rallyCheckoutData.config.clientId = clientId;
         rallyCheckoutData.currency = "${session.currency.currencyCode}";
+        <isif condition="${pdict.currentStage}">
+        rallyCheckoutData.rallyConfig.product = 'RALLY_OFFERS';
+        <iselse/>
+        rallyCheckoutData.rallyConfig.product = 'RALLY_CHECKOUT';
+        </isif>
         <isif condition="${customer !== null}">
         var customerData = {
             externalCustomerId: '${customer.getCustomerNo()}',

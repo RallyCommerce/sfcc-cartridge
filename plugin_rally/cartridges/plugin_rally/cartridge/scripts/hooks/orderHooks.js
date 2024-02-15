@@ -273,6 +273,7 @@ exports.beforePOST = function (basket) {
         var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
         rallyHelper.updateCustomSessionVariables(basket.UUID);
         request.session.custom.basketId = basket.UUID;
+        basket.custom.basketId = basket.UUID;
     }
     return new Status(Status.OK);
 };
