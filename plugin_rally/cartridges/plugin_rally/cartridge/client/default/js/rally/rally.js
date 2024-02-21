@@ -1,4 +1,5 @@
 'use strict';
+var summaryHelpers = require('base/checkout/summary');
 
 module.exports = {
     basketChange: function () {
@@ -35,8 +36,8 @@ module.exports = {
                 }
             })
             .done( function (data) {
-                $('body').trigger('checkout:updateCheckoutView',
-                    { order: data.order, customer: data.customer, options: { keepOpen: true } });
+                summaryHelpers.updateTotals(data.order.totals);
+                summaryHelpers.updateOrderProductSummaryInformation(data.order, data.options);
                 $.spinner().stop();
                 if (callback) {
                     callback();
