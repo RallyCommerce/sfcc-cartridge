@@ -3,9 +3,6 @@ var Site = require('dw/system/Site');
 var URLUtils = require('dw/web/URLUtils');
 var Transaction = require('dw/system/Transaction');
 
-var rallyEnabled = Site.getCurrent().getCustomPreferenceValue('rallyEnabled');
-var rallyClientID = Site.getCurrent().getCustomPreferenceValue('rallyClientID');
-
 function getConfiguration(currentBasket) {
     var cartID = currentBasket.UUID;
     var storeCurrency = currentBasket.currencyCode.toString();
@@ -39,6 +36,10 @@ function createProductStockLine(productId, inventoryRecord, masterProductId) {
     } else {
         inventoryObject.externalProductId = productId;
         inventoryObject.externalVariantId = null;
+    }
+
+    if (inventoryRecord.perpetual) {
+        inventoryObject.unlimited = true;
     }
 
     inventoryObject.allocation = inventoryRecord.getAllocation().getValue();
@@ -211,8 +212,6 @@ function callCreateOrderHook(orderId) {
 }
 
 module.exports = {
-    rallyEnabled: rallyEnabled,
-    rallyClientID: rallyClientID,
     getConfiguration: getConfiguration,
     createProductStockLine: createProductStockLine,
     createOrUpdateBasketSession: createOrUpdateBasketSession,

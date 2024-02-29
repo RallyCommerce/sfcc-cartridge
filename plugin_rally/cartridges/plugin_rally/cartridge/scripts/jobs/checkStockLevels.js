@@ -7,22 +7,7 @@ var Site = require('dw/system/Site');
 var Transaction = require('dw/system/Transaction');
 var Logger = require('dw/system/Logger').getLogger('rally.products.inventory');
 var RallyServiceHelper = require('*/cartridge/scripts/service/rallyServiceInit.js');
-
-function createProductStockLine(productId, inventoryRecord, masterProductId) {
-    var inventoryObject = {};
-    if (masterProductId) {
-        inventoryObject.externalProductId = masterProductId;
-        inventoryObject.externalVariantId = productId;
-    } else {
-        inventoryObject.externalProductId = productId;
-        inventoryObject.externalVariantId = null;
-    }
-
-    inventoryObject.allocation = inventoryRecord.getAllocation().getValue();
-    inventoryObject.quantity = inventoryRecord.getStockLevel().getValue();
-
-    return inventoryObject;
-}
+var rallyHelper = require('*/cartridge/scripts/util/rallyHelper.js');
 
 function checkForDuplicates(productsArray, productId) {
     var isDuplicated = productsArray.some(function (item) {
@@ -69,7 +54,7 @@ var checkLevels = function (args) {
                     var pam = variant.getAvailabilityModel();
                     var inventoryRecord = pam.getInventoryRecord();
                     if (inventoryRecord && inventoryRecord.getLastModified() > lastUpdateTime) {
-                        productsArray.push(createProductStockLine(variant.getID(), inventoryRecord, variant.getMasterProduct().getID()));
+                        productsArray.push(rallyHelper.createProductStockLine(variant.getID(), inventoryRecord, variant.getMasterProduct().getID()));
                     }
                 });
             } else {
@@ -77,7 +62,7 @@ var checkLevels = function (args) {
                 var inventoryRecord = pam.getInventoryRecord();
                 if (inventoryRecord && inventoryRecord.getLastModified() > lastUpdateTime && !checkForDuplicates(productsArray, product.getID())) {
                     var masterProductId = product.isVariant() ? product.getMasterProduct().getID() : null;
-                    productsArray.push(createProductStockLine(product.getID(), inventoryRecord, masterProductId));
+                    productsArray.push(rallyHelper.createProductStockLine(product.getID(), inventoryRecord, masterProductId));
                 }
             }
         }
