@@ -1,5 +1,6 @@
 'use strict';
 var summaryHelpers = require('base/checkout/summary');
+var shippingHelpers = require('base/checkout/shipping');
 
 module.exports = {
     basketChange: function () {
@@ -38,6 +39,14 @@ module.exports = {
             .done( function (data) {
                 summaryHelpers.updateTotals(data.order.totals);
                 summaryHelpers.updateOrderProductSummaryInformation(data.order, data.options);
+                data.order.shipping.forEach(function (shipping) {
+                    shippingHelpers.methods.updateShippingInformation(
+                        shipping,
+                        data.order,
+                        data.customer,
+                        data.options
+                    );
+                });
                 $.spinner().stop();
                 if (callback) {
                     callback();

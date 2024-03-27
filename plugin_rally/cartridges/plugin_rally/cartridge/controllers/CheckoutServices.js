@@ -8,6 +8,11 @@ server.append('PlaceOrder', function (req, res, next) {
 
     if (viewData.orderID) {
         var orderNo = viewData.orderID;
+        var orderToken = viewData.orderToken;
+        var OrderMgr = require('dw/order/OrderMgr');
+        var order = OrderMgr.getOrder(orderNo);
+        session.custom.tempOrderID = orderNo;
+        session.custom.tempOrderToken = orderToken;
         try {
             var rallyHelper = require('*/cartridge/scripts/util/rallyHelper');
             rallyHelper.callCreateOrderHook(orderNo);

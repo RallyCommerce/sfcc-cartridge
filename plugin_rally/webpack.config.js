@@ -10,37 +10,4 @@ module.exports = [{
         path: path.resolve('./cartridges/plugin_rally/cartridge/static'),
         filename: '[name].js'
     }
-}, {
-    mode: 'none',
-    name: 'scss',
-    entry: sgmfScripts.createScssPath(),
-    output: {
-        path: path.resolve('./cartridges/plugin_rally/cartridge/static'),
-        filename: '[name].css'
-    },
-    module: {
-        rules: [{
-            test: /\.scss$/,
-            use: ExtractTextPlugin.extract({
-                use: [{
-                    loader: 'css-loader',
-                    options: {
-                        url: false
-                    }
-                }, {
-                    loader: 'postcss-loader',
-                    options: {
-                        plugins: [
-                            require('autoprefixer')()
-                        ]
-                    }
-                }, {
-                    loader: 'sass-loader'
-                }]
-            })
-        }]
-    },
-    plugins: [
-        new ExtractTextPlugin({ filename: '[name].css' })
-    ]
 }];
